@@ -6,6 +6,7 @@ import {
   Patch,
   Param,
   Delete,
+  InternalServerErrorException,
 } from '@nestjs/common';
 import { CategoriesService } from './categories.service';
 import { CreateCategoryDto } from './dto/create-category.dto';
@@ -17,10 +18,12 @@ export class CategoriesController {
   constructor(private readonly categoriesService: CategoriesService) {}
 
   @Post()
-  async create(
-    @Body() createCategoryDto: CreateCategoryDto,
-  ): Promise<Category> {
-    return await this.categoriesService.create(createCategoryDto);
+  async create(@Body() createCategoryDto: CreateCategoryDto) {
+    try {
+      return await this.categoriesService.create(createCategoryDto);
+    } catch (error) {
+      throw new InternalServerErrorException(error);
+    }
   }
 
   @Get()
