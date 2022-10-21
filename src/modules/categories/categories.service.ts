@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import mongoose, { Model } from 'mongoose';
+import { Model } from 'mongoose';
 import { CreateCategoryDto } from './dto/create-category.dto';
 import { UpdateCategoryDto } from './dto/update-category.dto';
 import { Category, CategoryDocument } from './schemas/category.schema';
@@ -11,11 +11,8 @@ export class CategoriesService {
     @InjectModel(Category.name) private categoryModel: Model<CategoryDocument>,
   ) {}
 
-  create(dto: CreateCategoryDto) {
-    const payload = {
-      ...dto,
-    };
-    return this.categoryModel.create(payload);
+  create(createCategoryDto: CreateCategoryDto) {
+    return this.categoryModel.create({ ...createCategoryDto });
   }
 
   findAll() {
@@ -23,11 +20,11 @@ export class CategoriesService {
   }
 
   findOne(id: string) {
-    return this.categoryModel.findById(id);
+    return this.categoryModel.findById(id).populate('products');
   }
 
-  update(id: string, updateCategoryDto: UpdateCategoryDto) {
-    return this.categoryModel.findByIdAndUpdate(
+  async update(id: string, updateCategoryDto: UpdateCategoryDto) {
+    return await this.categoryModel.findByIdAndUpdate(
       id,
       { ...updateCategoryDto },
       { new: true },

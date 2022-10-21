@@ -4,7 +4,7 @@ import { Product } from 'src/modules/products/schemas/product.schema';
 
 @Schema()
 export class Category {
-  @Prop({ required: true })
+  @Prop()
   name: string;
 
   @Prop()

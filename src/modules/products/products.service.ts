@@ -22,7 +22,7 @@ export class ProductsService {
   }
 
   async findOne(id: string) {
-    const data = await this.productModel.findById(id);
+    const data = await this.productModel.findById(id).populate('category');
     return data;
   }
 

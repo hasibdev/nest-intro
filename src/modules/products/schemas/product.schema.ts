@@ -4,14 +4,13 @@ import { Category } from 'src/modules/categories/schemas/category.schema';
 
 @Schema()
 export class Product {
-  @Prop({ required: true })
+  @Prop()
   name: string;
 
-  @Prop({ required: true })
+  @Prop()
   price: number;
 
   @Prop({
-    required: true,
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Category',
   })
