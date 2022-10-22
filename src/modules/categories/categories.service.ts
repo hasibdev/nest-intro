@@ -31,7 +31,9 @@ export class CategoriesService {
 
   async findOne(id: string) {
     try {
-      const data = await this.categoryModel.findById(id).populate('products');
+      const data = await this.categoryModel
+        .findOne({ _id: id })
+        .populate('products');
       return Promise.resolve(data);
     } catch (error) {
       return Promise.reject(error);
@@ -40,8 +42,8 @@ export class CategoriesService {
 
   async update(id: string, updateCategoryDto: UpdateCategoryDto) {
     try {
-      const data = await this.categoryModel.findByIdAndUpdate(
-        id,
+      const data = await this.categoryModel.findOneAndUpdate(
+        { _id: id },
         { ...updateCategoryDto, updated_at: new Date() },
         { new: true },
       );
@@ -54,7 +56,7 @@ export class CategoriesService {
 
   async remove(id: string) {
     try {
-      await this.categoryModel.findByIdAndDelete(id);
+      await this.categoryModel.findOneAndDelete({ _id: id });
       return Promise.resolve(id);
     } catch (error) {
       return Promise.reject(error);

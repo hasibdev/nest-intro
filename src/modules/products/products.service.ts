@@ -31,7 +31,9 @@ export class ProductsService {
 
   async findOne(id: string) {
     try {
-      const data = await this.productModel.findById(id).populate('category');
+      const data = await this.productModel
+        .findOne({ _id: id })
+        .populate('category');
       return Promise.resolve(data);
     } catch (error) {
       return Promise.reject(error);
@@ -40,8 +42,8 @@ export class ProductsService {
 
   async update(id: string, updateProductDto: UpdateProductDto) {
     try {
-      const data = await this.productModel.findByIdAndUpdate(
-        id,
+      const data = await this.productModel.findOneAndUpdate(
+        { _id: id },
         { ...updateProductDto, updated_at: new Date() },
         { new: true },
       );
@@ -54,7 +56,7 @@ export class ProductsService {
 
   async remove(id: string) {
     try {
-      await this.productModel.findByIdAndDelete(id);
+      await this.productModel.findOneAndRemove({ _id: id });
       return Promise.resolve(id);
     } catch (error) {
       return Promise.reject(error);
