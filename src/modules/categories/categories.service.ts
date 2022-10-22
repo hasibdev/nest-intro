@@ -20,10 +20,27 @@ export class CategoriesService {
     }
   }
 
-  async findAll() {
+  async findAll(query: any) {
+    const { page, limit, sort, search } = query;
+    let options = {};
+    if (search) {
+      options = {
+        ...options,
+        $or: [
+          { name: new RegExp(search.toString(), 'i') },
+          { description: new RegExp(search.toString(), 'i') },
+        ],
+      };
+    }
+
     try {
-      const data = await this.categoryModel.find();
-      return Promise.resolve(data);
+      const data = await this.categoryModel
+        .find(options)
+        .skip((page - 1) * limit)
+        .limit(limit)
+        .sort({ created_at: sort })
+        .exec();
+      return Promise.resolve({ data });
     } catch (error) {
       return Promise.reject(error);
     }
@@ -33,7 +50,8 @@ export class CategoriesService {
     try {
       const data = await this.categoryModel
         .findOne({ _id: id })
-        .populate('products');
+        .populate('products')
+        .exec();
       return Promise.resolve(data);
     } catch (error) {
       return Promise.reject(error);
@@ -42,11 +60,13 @@ export class CategoriesService {
 
   async update(id: string, updateCategoryDto: UpdateCategoryDto) {
     try {
-      const data = await this.categoryModel.findOneAndUpdate(
-        { _id: id },
-        { ...updateCategoryDto, updated_at: new Date() },
-        { new: true },
-      );
+      const data = await this.categoryModel
+        .findOneAndUpdate(
+          { _id: id },
+          { ...updateCategoryDto, updated_at: new Date() },
+          { new: true },
+        )
+        .exec();
 
       return Promise.resolve(data);
     } catch (error) {
@@ -56,7 +76,7 @@ export class CategoriesService {
 
   async remove(id: string) {
     try {
-      await this.categoryModel.findOneAndDelete({ _id: id });
+      await this.categoryModel.findOneAndDelete({ _id: id }).exec();
       return Promise.resolve(id);
     } catch (error) {
       return Promise.reject(error);

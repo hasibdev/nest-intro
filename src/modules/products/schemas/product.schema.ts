@@ -13,6 +13,7 @@ export class Product {
   @Prop({
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Category',
+    default: null,
   })
   category: Category;
 

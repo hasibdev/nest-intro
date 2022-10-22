@@ -14,6 +14,7 @@ export const validationConfig = new ValidationPipe({
       property,
       children,
       constraints,
+      messages: Object.values(constraints),
     }));
     return new UnprocessableEntityException(error);
   },

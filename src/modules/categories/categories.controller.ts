@@ -8,11 +8,12 @@ import {
   Param,
   Delete,
   InternalServerErrorException,
+  Query,
 } from '@nestjs/common';
+import { QueryValidationPipe } from 'src/pipes/query.validation.pipe';
 import { CategoriesService } from './categories.service';
 import { CreateCategoryDto } from './dto/create-category.dto';
 import { UpdateCategoryDto } from './dto/update-category.dto';
-import { Category } from './schemas/category.schema';
 
 @Controller('categories')
 export class CategoriesController {
@@ -28,9 +29,9 @@ export class CategoriesController {
   }
 
   @Get()
-  async findAll(): Promise<Category[]> {
+  async findAll(@Query(QueryValidationPipe) query: any) {
     try {
-      return await this.categoriesService.findAll();
+      return await this.categoriesService.findAll(query);
     } catch (error) {
       throw new InternalServerErrorException(error);
     }
