@@ -28,12 +28,20 @@ export class CategoriesController {
 
   @Get()
   async findAll(): Promise<Category[]> {
-    return await this.categoriesService.findAll();
+    try {
+      return await this.categoriesService.findAll();
+    } catch (error) {
+      throw new InternalServerErrorException(error);
+    }
   }
 
   @Get(':id')
   async findOne(@Param('id') id: string) {
-    return await this.categoriesService.findOne(id);
+    try {
+      return await this.categoriesService.findOne(id);
+    } catch (error) {
+      throw new InternalServerErrorException(error);
+    }
   }
 
   @Patch(':id')
@@ -41,13 +49,21 @@ export class CategoriesController {
     @Param('id') id: string,
     @Body() updateCategoryDto: UpdateCategoryDto,
   ): Promise<Category> {
-    return await this.categoriesService.update(id, updateCategoryDto);
+    try {
+      return await this.categoriesService.update(id, updateCategoryDto);
+    } catch (error) {
+      throw new InternalServerErrorException(error);
+    }
   }
 
   @Delete(':id')
   async remove(@Param('id') id: string) {
-    await this.categoriesService.remove(id);
+    try {
+      await this.categoriesService.remove(id);
 
-    return { message: 'Deleted Successfully', id };
+      return { message: 'Deleted Successfully', id };
+    } catch (error) {
+      throw new InternalServerErrorException(error);
+    }
   }
 }

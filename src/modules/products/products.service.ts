@@ -12,31 +12,52 @@ export class ProductsService {
   ) {}
 
   async create(createProductDto: CreateProductDto) {
-    const data = await this.productModel.create({ ...createProductDto });
-    return data;
+    try {
+      const data = await this.productModel.create({ ...createProductDto });
+      return Promise.resolve(data);
+    } catch (error) {
+      return Promise.reject(error);
+    }
   }
 
   async findAll() {
-    const data = await this.productModel.find();
-    return data;
+    try {
+      const data = await this.productModel.find();
+      return Promise.resolve(data);
+    } catch (error) {
+      return Promise.reject(error);
+    }
   }
 
   async findOne(id: string) {
-    const data = await this.productModel.findById(id).populate('category');
-    return data;
+    try {
+      const data = await this.productModel.findById(id).populate('category');
+      return Promise.resolve(data);
+    } catch (error) {
+      return Promise.reject(error);
+    }
   }
 
   async update(id: string, updateProductDto: UpdateProductDto) {
-    const data = await this.productModel.findByIdAndUpdate(
-      id,
-      updateProductDto,
-      { new: true },
-    );
+    try {
+      const data = await this.productModel.findByIdAndUpdate(
+        id,
+        updateProductDto,
+        { new: true },
+      );
 
-    return data;
+      return Promise.resolve(data);
+    } catch (error) {
+      return Promise.reject(error);
+    }
   }
 
   async remove(id: string) {
-    return await this.productModel.findByIdAndDelete(id);
+    try {
+      await this.productModel.findByIdAndDelete(id);
+      return Promise.resolve(id);
+    } catch (error) {
+      return Promise.reject(error);
+    }
   }
 }

@@ -7,6 +7,7 @@ import {
   Put,
   Param,
   Delete,
+  InternalServerErrorException,
 } from '@nestjs/common';
 import { ProductsService } from './products.service';
 import { CreateProductDto } from './dto/create-product.dto';
@@ -20,10 +21,9 @@ export class ProductsController {
   @Post()
   async create(@Body() createProductDto: CreateProductDto): Promise<Product> {
     try {
-      const data = await this.productsService.create(createProductDto);
-      return data;
+      return await this.productsService.create(createProductDto);
     } catch (error) {
-      return error;
+      throw new InternalServerErrorException(error);
     }
   }
 
@@ -32,7 +32,7 @@ export class ProductsController {
     try {
       return await this.productsService.findAll();
     } catch (error) {
-      return error;
+      throw new InternalServerErrorException(error);
     }
   }
 
@@ -41,7 +41,7 @@ export class ProductsController {
     try {
       return await this.productsService.findOne(id);
     } catch (error) {
-      return error;
+      throw new InternalServerErrorException(error);
     }
   }
 
@@ -57,7 +57,7 @@ export class ProductsController {
       });
       return data;
     } catch (error) {
-      return error;
+      throw new InternalServerErrorException(error);
     }
   }
 
@@ -67,7 +67,7 @@ export class ProductsController {
       await this.productsService.remove(id);
       return { message: 'Deleted Successfully', id };
     } catch (error) {
-      return error;
+      throw new InternalServerErrorException(error);
     }
   }
 }

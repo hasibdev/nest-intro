@@ -4,10 +4,10 @@ import { Category } from 'src/modules/categories/schemas/category.schema';
 
 @Schema()
 export class Product {
-  @Prop()
+  @Prop({ required: true })
   name: string;
 
-  @Prop()
+  @Prop({ required: true })
   price: number;
 
   @Prop({
@@ -15,6 +15,12 @@ export class Product {
     ref: 'Category',
   })
   category: Category;
+
+  @Prop({ default: () => Date.now(), immutable: true })
+  created_at: Date;
+
+  @Prop({ default: () => Date.now() })
+  updated_at: Date;
 }
 
 export type ProductDocument = Product & Document;

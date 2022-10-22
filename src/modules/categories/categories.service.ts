@@ -11,27 +11,52 @@ export class CategoriesService {
     @InjectModel(Category.name) private categoryModel: Model<CategoryDocument>,
   ) {}
 
-  create(createCategoryDto: CreateCategoryDto) {
-    return this.categoryModel.create({ ...createCategoryDto });
+  async create(createCategoryDto: CreateCategoryDto) {
+    try {
+      const data = await this.categoryModel.create({ ...createCategoryDto });
+      return Promise.resolve(data);
+    } catch (error) {
+      return Promise.reject(error);
+    }
   }
 
-  findAll() {
-    return this.categoryModel.find().exec();
+  async findAll() {
+    try {
+      const data = await this.categoryModel.find();
+      return Promise.resolve(data);
+    } catch (error) {
+      return Promise.reject(error);
+    }
   }
 
-  findOne(id: string) {
-    return this.categoryModel.findById(id).populate('products');
+  async findOne(id: string) {
+    try {
+      const data = await this.categoryModel.findById(id).populate('products');
+      return Promise.resolve(data);
+    } catch (error) {
+      return Promise.reject(error);
+    }
   }
 
   async update(id: string, updateCategoryDto: UpdateCategoryDto) {
-    return await this.categoryModel.findByIdAndUpdate(
-      id,
-      { ...updateCategoryDto },
-      { new: true },
-    );
+    try {
+      const data = await this.categoryModel.findByIdAndUpdate(
+        id,
+        { ...updateCategoryDto },
+        { new: true },
+      );
+      return Promise.resolve(data);
+    } catch (error) {
+      return Promise.reject(error);
+    }
   }
 
-  remove(id: string) {
-    return this.categoryModel.findByIdAndDelete(id);
+  async remove(id: string) {
+    try {
+      await this.categoryModel.findByIdAndDelete(id);
+      return Promise.resolve(id);
+    } catch (error) {
+      return Promise.reject(error);
+    }
   }
 }
