@@ -54,7 +54,7 @@ export class ProductsController {
   @Patch(':id')
   @Put(':id')
   async update(
-    @Param('id') id: string,
+    @Param('id', ObjectIdValidationPipe) id: string,
     @Body() updateProductDto: UpdateProductDto,
   ) {
     try {
@@ -68,7 +68,7 @@ export class ProductsController {
   }
 
   @Delete(':id')
-  async remove(@Param('id') id: string) {
+  async remove(@Param('id', ObjectIdValidationPipe) id: string) {
     try {
       await this.productsService.remove(id);
       return { message: 'Deleted Successfully', id };

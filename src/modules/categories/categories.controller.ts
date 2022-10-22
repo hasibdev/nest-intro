@@ -10,6 +10,7 @@ import {
   InternalServerErrorException,
   Query,
 } from '@nestjs/common';
+import { ObjectIdValidationPipe } from 'src/pipes/objectId.validation.pipe';
 import {
   QueryType,
   QueryValidationPipe,
@@ -41,7 +42,7 @@ export class CategoriesController {
   }
 
   @Get(':id')
-  async findOne(@Param('id') id: string) {
+  async findOne(@Param('id', ObjectIdValidationPipe) id: string) {
     try {
       return await this.categoriesService.findOne(id);
     } catch (error) {
@@ -52,7 +53,7 @@ export class CategoriesController {
   @Patch(':id')
   @Put(':id')
   async update(
-    @Param('id') id: string,
+    @Param('id', ObjectIdValidationPipe) id: string,
     @Body() updateCategoryDto: UpdateCategoryDto,
   ) {
     try {
@@ -63,7 +64,7 @@ export class CategoriesController {
   }
 
   @Delete(':id')
-  async remove(@Param('id') id: string) {
+  async remove(@Param('id', ObjectIdValidationPipe) id: string) {
     try {
       await this.categoriesService.remove(id);
 
