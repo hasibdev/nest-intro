@@ -10,7 +10,10 @@ import {
   InternalServerErrorException,
   Query,
 } from '@nestjs/common';
-import { QueryValidationPipe } from 'src/pipes/query.validation.pipe';
+import {
+  QueryType,
+  QueryValidationPipe,
+} from 'src/pipes/query.validation.pipe';
 import { CategoriesService } from './categories.service';
 import { CreateCategoryDto } from './dto/create-category.dto';
 import { UpdateCategoryDto } from './dto/update-category.dto';
@@ -29,7 +32,7 @@ export class CategoriesController {
   }
 
   @Get()
-  async findAll(@Query(QueryValidationPipe) query: any) {
+  async findAll(@Query(QueryValidationPipe) query: QueryType) {
     try {
       return await this.categoriesService.findAll(query);
     } catch (error) {
