@@ -4,6 +4,7 @@ import {
   Post,
   Body,
   Patch,
+  Put,
   Param,
   Delete,
   InternalServerErrorException,
@@ -45,10 +46,11 @@ export class CategoriesController {
   }
 
   @Patch(':id')
+  @Put(':id')
   async update(
     @Param('id') id: string,
     @Body() updateCategoryDto: UpdateCategoryDto,
-  ): Promise<Category> {
+  ) {
     try {
       return await this.categoriesService.update(id, updateCategoryDto);
     } catch (error) {

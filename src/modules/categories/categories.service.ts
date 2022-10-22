@@ -42,9 +42,10 @@ export class CategoriesService {
     try {
       const data = await this.categoryModel.findByIdAndUpdate(
         id,
-        { ...updateCategoryDto },
+        { ...updateCategoryDto, updated_at: new Date() },
         { new: true },
       );
+
       return Promise.resolve(data);
     } catch (error) {
       return Promise.reject(error);

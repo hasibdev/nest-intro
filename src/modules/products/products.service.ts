@@ -42,7 +42,7 @@ export class ProductsService {
     try {
       const data = await this.productModel.findByIdAndUpdate(
         id,
-        updateProductDto,
+        { ...updateProductDto, updated_at: new Date() },
         { new: true },
       );
 

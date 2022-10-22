@@ -22,4 +22,4 @@ export class Category {
 
 export type CategoryDocument = Category & Document;
 
-export const categorySchema = SchemaFactory.createForClass(Category);
+export const CategorySchema = SchemaFactory.createForClass(Category);
