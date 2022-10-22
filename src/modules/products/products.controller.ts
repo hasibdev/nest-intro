@@ -18,6 +18,7 @@ import {
   QueryType,
   QueryValidationPipe,
 } from 'src/pipes/query.validation.pipe';
+import { ObjectIdValidationPipe } from 'src/pipes/objectId.validation.pipe';
 
 @Controller('products')
 export class ProductsController {
@@ -42,7 +43,7 @@ export class ProductsController {
   }
 
   @Get(':id')
-  async findOne(@Param('id') id: string): Promise<Product> {
+  async findOne(@Param('id', ObjectIdValidationPipe) id: string) {
     try {
       return await this.productsService.findOne(id);
     } catch (error) {
@@ -55,7 +56,7 @@ export class ProductsController {
   async update(
     @Param('id') id: string,
     @Body() updateProductDto: UpdateProductDto,
-  ): Promise<Product> {
+  ) {
     try {
       const data = await this.productsService.update(id, {
         ...updateProductDto,

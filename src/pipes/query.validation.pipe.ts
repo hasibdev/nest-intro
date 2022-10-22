@@ -31,7 +31,8 @@ export class QueryValidationPipe implements PipeTransform {
       // Limit Query
       if (value.limit) {
         if (/^\d+$/.test(value.limit.toString())) {
-          value.limit = parseInt(value.limit.toString());
+          const limit = parseInt(value.limit.toString());
+          value.limit = limit < 1 ? 1 : limit;
         } else {
           throw new BadRequestException('Invalid Page Query Value!');
         }
