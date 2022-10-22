@@ -8,11 +8,16 @@ import {
   Param,
   Delete,
   InternalServerErrorException,
+  Query,
 } from '@nestjs/common';
 import { ProductsService } from './products.service';
 import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
 import { Product } from './schemas/product.schema';
+import {
+  QueryType,
+  QueryValidationPipe,
+} from 'src/pipes/query.validation.pipe';
 
 @Controller('products')
 export class ProductsController {
@@ -28,9 +33,9 @@ export class ProductsController {
   }
 
   @Get()
-  async findAll(): Promise<Product[]> {
+  async findAll(@Query(QueryValidationPipe) query: QueryType) {
     try {
-      return await this.productsService.findAll();
+      return await this.productsService.findAll(query);
     } catch (error) {
       throw new InternalServerErrorException(error);
     }

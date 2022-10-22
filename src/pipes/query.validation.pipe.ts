@@ -20,7 +20,8 @@ export class QueryValidationPipe implements PipeTransform {
       // Page Query
       if (value.page) {
         if (/^\d+$/.test(value.page.toString())) {
-          value.page = parseInt(value.page.toString());
+          const page = parseInt(value.page.toString());
+          value.page = page < 1 ? 1 : page;
         } else {
           throw new BadRequestException('Invalid Page Query Value!');
         }

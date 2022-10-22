@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
+import { QueryType } from 'src/pipes/query.validation.pipe';
 import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
 import { Product, ProductDocument } from './schemas/product.schema';
@@ -20,10 +21,40 @@ export class ProductsService {
     }
   }
 
-  async findAll() {
+  async findAll(query: QueryType) {
+    const { page, limit, sort, search } = query;
+    let options = {};
+    if (search) {
+      options = {
+        ...options,
+        $or: [
+          { name: new RegExp(search.toString(), 'i') },
+          { price: /^\d+$/.test(search) ? Number(search) : null },
+        ],
+      };
+    }
+
     try {
-      const data = await this.productModel.find();
-      return Promise.resolve(data);
+      const data = await this.productModel
+        .find(options)
+        .skip((page - 1) * limit)
+        .limit(limit)
+        .sort({ created_at: sort })
+        .exec();
+
+      const count = await this.productModel.countDocuments();
+      const total_page = Math.ceil(count / limit);
+      const previous_page = page == 1 ? null : page - 1;
+      const next_page = page == total_page ? null : page + 1;
+      const pagination = {
+        count,
+        limit,
+        total_page,
+        current_page: page,
+        next_page,
+        previous_page,
+      };
+      return Promise.resolve({ pagination, data });
     } catch (error) {
       return Promise.reject(error);
     }
